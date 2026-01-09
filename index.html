@@ -1,0 +1,1693 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Vote no Novo Setlist</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: radial-gradient(circle at top, #1b2a3a, #05070c);
+      color: #eaeaea;
+    }
+
+    .site-header {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 12px 12px;
+      max-width: 1100px;
+      margin: 0 auto 10px;
+    }
+
+    .site-logo {
+      width: 104px;   /* pequeno */
+      height: auto;
+      flex-shrink: 0;
+    }
+
+    .header-text {
+      line-height: 1.2;
+    }
+
+    .header-text .title {
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+
+    .header-text .subtitle {
+      font-size: 0.8rem;
+      color: #bdbdbd;
+    }
+
+    .album {
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 20px;
+      display: flex;
+      gap: 20px;
+      border-bottom: 1px solid #1f2e40;
+    }
+
+    .album img {
+      width: 180px;
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.6);
+      background-color: #0000;
+    }
+
+    .album-content {
+      flex: 1;
+    }
+
+    .album-content h2 {
+      margin: 0;
+      color: #8fbce6;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin-top: 15px;
+    }
+
+    li {
+      padding: 6px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px dotted #2a3b52;
+      font-size: 0.95em;
+    }
+
+    .played {
+      font-size: 0.7em;   /* menor */
+      color: #6ddf9c;
+      white-space: nowrap;
+    }
+
+    .links a {
+      margin-left: 6px;
+      text-decoration: none;
+      color: #c7d8ea;
+      font-size: 0.85em;
+    }
+
+    .links a:hover {
+      color: #ffffff;
+    }
+
+    footer {
+      text-align: center;
+      padding: 25px 15px;
+      font-size: 0.85rem;
+      color: #bdbdbd;
+    }
+
+    footer a {
+      color: #e0e0e0; /* cinza bem claro */
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    footer a:hover {
+      color: #ffffff;
+      text-decoration: underline;
+    }
+
+    footer .instagram a {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px; /* espaço entre ícone e texto */
+    }
+
+    footer .instagram-icon {
+      width: 20px;
+      height: 20px;
+      transition: opacity 0.3s ease;
+    }
+
+    footer .instagram a:hover .instagram-icon {
+      opacity: 0.85;
+    }
+    
+   @media (max-width: 700px) {
+  .album {
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .album img {
+    width: 240px;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+  }
+
+/* IMPORTANTE: neutraliza o center só nas tracks */
+  .album-info {
+    width: 100%;
+  }
+
+  .track-top {
+    text-align: left;
+    width: 100%;
+  }
+}
+
+/* ===== VOTAÇÃO ===== */
+  
+/*ESCONDE O CONTADOR */
+  .votes {
+    display: none;
+}
+ 
+.track {
+  padding: 10px 0;
+  border-bottom: 1px dotted #2a3b52;
+}
+
+.track-top {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  width: 100%;
+}
+
+.track-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.vote-btn {
+  min-width: 50px;
+  padding: 3px 6px;
+  font-size: 0.8em;
+  border-radius: 5px;
+  background: linear-gradient(135deg, #b30000, #ff3333);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  justify-self: end;
+  white-space: nowrap;
+}
+    
+    
+.track-links {
+  margin-top: 4px;
+  display: flex;
+  gap: 12px;
+  font-size: 0.85em;
+}
+
+.track-links a {
+  margin-right: 8px;
+  text-decoration: none;
+  opacity: 0.85;
+}
+
+.track-links a:hover {
+  opacity: 1;
+}
+
+.yt-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 28px;
+  height: 28px;
+  margin-left: 6px;
+
+  border-radius: 6px;
+  background: transparent;
+
+  opacity: 0.85;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.yt-btn img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.yt-btn:hover {
+  opacity: 1;
+  transform: scale(1.05);
+}
+
+
+    
+
+/* cores oficiais */
+.spotify { color: #1DB954; }
+.deezer { color: #EF5466; }
+.youtube { color: #FF3B3B; }
+
+/* ===== BUSCA ===== */   
+.search-box {
+  max-width: 450px;
+  margin: 30px auto 20px;
+  padding: 0 20px;
+  position: relative;
+}
+
+.search-box input {
+  width: 100%;
+  padding: 14px 18px 14px 46px;
+  font-size: 1em;
+  border-radius: 30px;
+  border: 1px solid #2a3b52;
+  background: linear-gradient(180deg, #0d1622, #05070c);
+  color: #eaeaea;
+  outline: none;
+  box-shadow: 0 0 18px rgba(0,0,0,0.5);
+  transition: all 0.25s ease;
+}
+
+.search-box input::placeholder {
+  color: #8aa0b8;
+}
+
+.search-box input:focus {
+  border-color: #b30000;
+  box-shadow: 0 0 22px rgba(179,0,0,0.45);
+  transform: scale(1.01);
+}
+
+.search-icon {
+  position: absolute;
+  top: 50%;
+  left: 36px;
+  transform: translateY(-50%);
+  pointer-events: none;
+  opacity: 0.7;
+  font-size: 1em;
+}
+
+/* Mobile refinado */
+@media (max-width: 540px) {
+  .search-box input {
+    font-size: 0.95em;
+    padding: 12px 16px 12px 44px;
+  }
+}
+
+
+    
+.toast {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+
+  width: 380px;        /* 👈 AQUI você controla a largura */
+  max-width: 90%;      /* 👈 evita quebrar no mobile */
+  line-height: 1.3;
+  
+  background: linear-gradient(135deg, #b30000, #ff3333);
+  color: #fff;
+  padding: 12px 18px;
+  border-radius: 10px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;       
+  text-align: center;
+
+  box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+  
+  font-size: 0.95em;
+  box-shadow: 0 0 20px rgba(0,0,0,0.6);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  z-index: 9999;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(-10px);
+}    
+
+.toast-title,
+.toast-message {
+  width: 100%;
+  text-align: center;
+}
+
+.radio-player {
+  max-width: 430px;
+  margin: 15px auto 5px;
+  padding: 0 20px;
+}
+
+.radio-player iframe {
+  width: 100%;
+  height: 70px;          /* altura pequena = foco no áudio */
+  border-radius: 12px;
+  border: none;
+  background: #000;
+}
+    
+  </style>
+</head>
+
+<body>
+
+<header class="site-header">
+  <img src="wtlogo.png" alt="WT Tribute Logo" class="site-logo">
+
+  <div class="header-text">
+    <div class="title">Vote no Novo Setlist</div>
+    <div class="subtitle">Ajude a escolher as músicas do próximo show</div>
+  </div>
+</header>
+
+<!-- ===== PASSO 1: BUSCA ===== -->
+<div class="search-box">
+  <input
+    type="text"
+    id="searchInput"
+    placeholder="Buscar música..."
+    onkeyup="filtrarMusicas()"
+  />
+</div>
+  
+<!-- ÁLBUM -->
+<section class="albums">
+
+  <!--   ENTER   -->
+  <div class="album">
+    <div class="album-cover">
+    <img src="assets/covers/enter.jpg" alt="   Enter (1997)   ">
+    </div>
+    <div class="album-info">
+      <h2>Enter (1997)</h2>
+<ul>
+<li class="track">
+  <div class="track-top">
+      <div class="track-left">
+        <span class="track-name">Restless</span>
+        </div>
+      <button class="vote-btn" onclick="vote('Restless')">Votar</button>
+    </div>
+</li>
+  
+<li class="track">
+  <div class="track-top">
+  <div class="track-left">
+    <span class="track-name">Enter</span>
+     </div>
+    <button class="vote-btn" onclick="vote('Enter')">Votar</button>
+  </div>
+</li>
+
+<li class="track">
+  <div class="track-top">
+  <div class="track-left">    
+    <span class="track-name">Pearls of Light</span>
+     </div>
+    <button class="vote-btn" onclick="vote('Pearls of Light')">Votar</button>
+  </div>
+</li>
+
+<li class="track">
+  <div class="track-top">
+  <div class="track-left">    
+    <span class="track-name">Deep Within</span>
+     </div>
+    <button class="vote-btn" onclick="vote('Deep Within')">Votar</button>
+  </div>
+</li>
+
+<li class="track">
+  <div class="track-top">
+  <div class="track-left">    
+    <span class="track-name">Gatekeeper</span>
+     </div>
+    <button class="vote-btn" onclick="vote('Gatekeeper')">Votar</button>
+  </div>
+</li>
+
+<li class="track">
+  <div class="track-top">
+  <div class="track-left">    
+    <span class="track-name">Grace</span>
+     </div>
+    <button class="vote-btn" onclick="vote('Grace')">Votar</button>
+  </div>
+</li>
+
+<li class="track">
+  <div class="track-top">
+  <div class="track-left">    
+    <span class="track-name">Blooded</span>
+     </div>
+    <button class="vote-btn" onclick="vote('Blooded')">Votar</button>
+  </div>
+</li>
+
+<li class="track">
+  <div class="track-top">
+  <div class="track-left">    
+    <span class="track-name">Candles</span>
+     </div>
+    <button class="vote-btn" onclick="vote('Candles')">Votar</button>
+  </div>
+</li>      
+</ul>       
+    </div>
+  </div>
+
+    <!--   THE DANCE   -->
+  <div class="album">
+    <div class="album-cover">
+    <img src="assets/covers/Dance.jpg" alt="   The Dance (1998)   ">
+    </div>
+    <div class="album-info">
+      <h2>The Dance (1998)</h2>
+<ul>
+<li class="track">
+  <div class="track-top">
+      <div class="track-left">
+        <span class="track-name">The Dance</span>
+        </div>
+      <button class="vote-btn" onclick="vote('The Dance')">Votar</button>
+    </div>
+</li>
+  
+<li class="track">
+  <div class="track-top">
+  <div class="track-left">
+    <span class="track-name">Another Day</span>
+     </div>
+    <button class="vote-btn" onclick="vote('Another Day')">Votar</button>
+  </div>
+</li>
+
+<li class="track">
+  <div class="track-top">
+  <div class="track-left">    
+    <span class="track-name">The Other Half (Of Me)</span>
+     </div>
+    <button class="vote-btn" onclick="vote('The Other Half (Of Me)')">Votar</button>
+  </div>
+</li>
+</ul>       
+    </div>
+  </div>
+
+  <!-- MOTHER EARTH -->
+  <div class="album">
+    <div class="album-cover">
+    <img src="assets/covers/mother-earth.jpg" alt="Mother Earth (2001)">
+    </div>
+    <div class="album-info">
+      <h2>Mother Earth (2001)</h2>
+      <ul>
+        <li class="track">
+            <div class="track-top">
+            <div class="track-left">              
+            <span class="track-name">Mother Earth</span>
+            <span class="played">✔ já tocamos</span>
+              </div>
+          </div>
+        </li>
+
+        <li class="track">
+            <div class="track-top">
+            <div class="track-left">              
+            <span class="track-name">Ice Queen</span>
+            <span class="played">✔ já tocamos</span>
+              </div>
+          </div>
+        </li>       
+
+        <li class="track">
+            <div class="track-top">
+            <div class="track-left">              
+            <span class="track-name">Our Farewell</span>
+               </div>
+            <button class="vote-btn" onclick="vote('Our Farewell')">Votar</button>
+          </div>
+        </li>
+
+        <li class="track">
+            <div class="track-top">
+            <div class="track-left">              
+            <span class="track-name">Caged</span>
+               </div>
+            <button class="vote-btn" onclick="vote('Caged')">Votar</button>
+          </div>
+        </li>
+
+        <li class="track">
+            <div class="track-top">
+            <div class="track-left">              
+            <span class="track-name">The Promise</span>
+               </div>
+            <button class="vote-btn" onclick="vote('The Promise')">Votar</button>
+          </div>
+        </li>
+
+        <li class="track">
+            <div class="track-top">
+            <div class="track-left">              
+            <span class="track-name">Never-Ending Story</span>
+               </div>
+            <button class="vote-btn" onclick="vote('Never-Ending Story')">Votar</button>
+          </div>
+        </li>
+
+        <li class="track">
+            <div class="track-top">
+            <div class="track-left">              
+            <span class="track-name">Deceiver of Fools</span>
+               </div>
+            <button class="vote-btn" onclick="vote('Deceiver of Fools')">Votar</button>
+          </div>
+        </li>
+
+        <li class="track">
+            <div class="track-top">
+            <div class="track-left">              
+            <span class="track-name">Intro ME</span>
+               </div>
+            <button class="vote-btn" onclick="vote('Intro ME')">Votar</button>
+          </div>
+        </li>       
+
+        <li class="track">
+            <div class="track-top">
+            <div class="track-left">              
+            <span class="track-name">Dark Wings</span>
+               </div>
+            <button class="vote-btn" onclick="vote('Dark Wings')">Votar</button>
+          </div>
+        </li>
+
+        <li class="track">
+            <div class="track-top">
+            <div class="track-left">              
+            <span class="track-name">In Perfect Harmony</span>
+               </div>
+            <button class="vote-btn" onclick="vote('In Perfect Harmony')">Votar</button>
+          </div>
+        </li>
+        
+        <li class="track">
+          <div class="track-top">
+            <div class="track-left">            
+            <span class="track-name">Jane Doe</span>
+               </div>
+            <button class="vote-btn" onclick="vote('Jane Doe')">Votar</button>
+          </div>
+        </li>        
+
+        <li class="track">
+            <div class="track-top">
+            <div class="track-left">              
+            <span class="track-name">Bittersweet</span>
+               </div>
+            <button class="vote-btn" onclick="vote('Bittersweet')">Votar</button>
+          </div>
+        </li>
+
+        <li class="track">
+            <div class="track-top">
+            <div class="track-left">              
+            <span class="track-name">World Of Make Believe</span>
+               </div>
+            <button class="vote-btn" onclick="vote('World Of Make Believe')">Votar</button>
+          </div>
+        </li>        
+      </ul>
+    </div>
+  </div>
+
+  <!-- THE SILENT FORCE -->
+  <div class="album">
+    <div class="album-cover">
+    <img src="assets/covers/silent-force.jpg" alt="The Silent Force (2004)">
+    </div>
+    <div class="album-info">
+      <h2>The Silent Force (2004)</h2>
+      <ul>        
+        <li class="track">
+          <div class="track-top">
+            <div class="track-left">            
+            <span class="track-name">Intro</span>
+               </div>
+            <button class="vote-btn" onclick="vote('Intro')">Votar</button>
+          </div>
+        </li>        
+        
+        
+        <li class="track">
+          <div class="track-top">
+            <div class="track-left">            
+            <span class="track-name">See Who I Am</span>
+               </div>
+            <button class="vote-btn" onclick="vote('See Who I Am')">Votar</button>
+          </div>
+        </li>        
+        
+        <li class="track">
+          <div class="track-top">
+            <div class="track-left">            
+            <span class="track-name">Jillian</span>
+               </div>
+            <button class="vote-btn" onclick="vote('Jillian')">Votar</button>
+          </div>
+        </li>
+        
+        <li class="track">
+          <div class="track-top">
+            <div class="track-left">            
+            <span class="track-name">Stand My Ground</span>
+            <span class="played">✔ já tocamos</span>
+              </div>
+          </div>
+        </li>
+         
+        <li class="track">
+          <div class="track-top">
+            <div class="track-left">            
+            <span class="track-name">Pale</span>
+               </div>
+            <button class="vote-btn" onclick="vote('Pale')">Votar</button>
+          </div>
+        </li>               
+        
+        <li class="track">
+          <div class="track-top">
+            <div class="track-left">            
+            <span class="track-name">Forsaken</span>
+               </div>              
+            <button class="vote-btn" onclick="vote('Forsaken')">Votar</button>
+          </div>
+        </li>
+        
+        <li class="track">
+          <div class="track-top">
+            <div class="track-left">            
+            <span class="track-name">Angels</span>
+               </div>
+            <button class="vote-btn" onclick="vote('Angels')">Votar</button>
+          </div>
+        </li>
+        
+        <li class="track">
+          <div class="track-top">
+            <div class="track-left">            
+            <span class="track-name">Memories</span>
+               </div>
+            <button class="vote-btn" onclick="vote('Memories')">Votar</button>
+          </div>
+        </li>                
+        
+        <li class="track">
+          <div class="track-top">
+            <div class="track-left">            
+            <span class="track-name">Aquarius</span>
+               </div>
+            <button class="vote-btn" onclick="vote('Aquarius')">Votar</button>
+          </div>
+        </li>
+        
+        <li class="track">
+          <div class="track-top">
+            <div class="track-left">            
+            <span class="track-name">It's the Fear</span>
+               </div>
+            <button class="vote-btn" onclick="vote('It\'s the Fear')">Votar</button>
+          </div>
+        </li>
+        
+        <li class="track">
+          <div class="track-top">
+            <div class="track-left">            
+            <span class="track-name">Somewhere</span>
+               </div>
+            <button class="vote-btn" onclick="vote('Somewhere')">Votar</button>
+          </div>
+        </li>                
+        
+        <li class="track">
+          <div class="track-top">
+            <div class="track-left">            
+            <span class="track-name">A Dangerous Mind</span>
+            <span class="played">✔ já tocamos</span>
+              </div>
+          </div>
+        </li>
+      
+        <li class="track">
+          <div class="track-top">
+            <div class="track-left">            
+            <span class="track-name">The Swan Song</span>
+               </div>
+            <button class="vote-btn" onclick="vote('The Swan Song')">Votar
+            </button>
+          </div>
+        </li>
+        
+        <li class="track">
+          <div class="track-top">
+            <div class="track-left">            
+            <span class="track-name">Toward the End</span>
+               </div>
+            <button class="vote-btn" onclick="vote('Toward the End')">Votar</button>
+          </div>
+        </li>         
+        
+        <li class="track">
+          <div class="track-top">
+            <div class="track-left">            
+            <span class="track-name">Destroyed (Demo Version)</span>
+               </div>
+            <button class="vote-btn" onclick="vote('Destroyed (Demo Version)')">Votar</button>
+          </div>
+        </li>        
+
+        <li class="track">
+          <div class="track-top">
+            <div class="track-left">            
+            <span class="track-name">Say My Name</span>
+               </div>
+            <button class="vote-btn" onclick="vote('Say My Name')">Votar</button>
+          </div>
+        </li>        
+      </ul>
+    </div>
+  </div>
+
+    <!-- RUNNING UP THAT HILL (EP) -->
+  <div class="album">
+    <div class="album-cover">
+    <img src="assets/covers/running_up_that_hill.jpg" alt="Running Up That Hill (2004)">
+    </div>
+    <div class="album-info">
+      <h2>Running Up That Hill(2004)</h2>
+      <ul>
+        <li class="track">
+          <div class="track-top">
+            <div class="track-left">            
+            <span class="track-name">Running Up That Hill</span>
+            <span class="played">✔ já tocamos</span>
+              </div>
+          </div>
+        </li>
+       </ul>
+    </div>
+  </div>
+
+  <!-- THE HEART OF EVERYTHING -->
+  <div class="album">
+    <div class="album-cover">
+    <img src="assets/covers/heart-of-everything.jpg" alt="The Heart of Everything (2007)">
+      </div>
+    <div class="album-info">
+      <h2>The Heart of Everything (2007)</h2>
+      <ul>
+        <li class="track">
+          <div class="track-top">
+            <div class="track-left">            
+            <span class="track-name">The Howling</span>
+               </div>
+            <button class="vote-btn" onclick="vote('The Howling')">Votar</button>
+          </div>
+        </li>
+
+        <li class="track">
+          <div class="track-top">
+            <div class="track-left">            
+            <span class="track-name">What Have You Done</span>
+               </div>
+            <button class="vote-btn" onclick="vote('What Have You Done')">Votar</button>
+          </div>
+        </li>        
+
+        <li class="track">
+          <div class="track-top">
+            <div class="track-left">            
+            <span class="track-name">Frozen</span>
+                 </div>  
+            <button class="vote-btn" onclick="vote('Frozen')">Votar</button>
+          </div>
+        </li>
+
+        <li class="track">
+          <div class="track-top">
+            <div class="track-left">            
+            <span class="track-name">Our Solemn Hour</span>
+               </div>
+            <button class="vote-btn" onclick="vote('Our Solemn Hour')">Votar</button>
+          </div>
+        </li>
+
+        <li class="track">
+          <div class="track-top">
+            <div class="track-left">            
+            <span class="track-name">The Heart of Everything</span>
+               </div>
+            <button class="vote-btn" onclick="vote('The Heart of Everything')">Votar</button>
+          </div>
+        </li>        
+
+        <li class="track">
+          <div class="track-top">
+            <div class="track-left">            
+            <span class="track-name">Hand of Sorrow</span>
+               </div>
+            <button class="vote-btn" onclick="vote('Hand of Sorrow')">Votar</button>
+          </div>
+        </li> 
+
+        <li class="track">
+          <div class="track-top">
+            <div class="track-left">            
+            <span class="track-name">The Cross</span>
+               </div>
+            <button class="vote-btn" onclick="vote('The Cross')">Votar</button>
+          </div>
+        </li>
+        
+        <li class="track">
+          <div class="track-top">
+            <div class="track-left">            
+            <span class="track-name">Final Destination</span>
+               </div>
+            <button class="vote-btn" onclick="vote('Final Destination')">Votar</button>
+          </div>
+        </li>
+
+        <li class="track">
+          <div class="track-top">
+            <div class="track-left">            
+            <span class="track-name">All I Need</span>
+               </div>
+            <button class="vote-btn" onclick="vote('All I Need')">Votar</button>
+          </div>
+        </li>
+
+        <li class="track">
+          <div class="track-top">
+            <div class="track-left">            
+            <span class="track-name">The Truth Beneath the Rose</span>
+               </div>
+            <button class="vote-btn" onclick="vote('The Truth Beneath the Rose')">Votar</button>
+          </div>
+        </li>
+
+        <li class="track">
+          <div class="track-top">
+            <div class="track-left">            
+            <span class="track-name">Forgiven</span>
+              </div>
+             <button class="vote-btn" onclick="vote('Forgiven')">Votar</button>           
+          </div>
+        </li>
+
+        <li class="track">
+          <div class="track-top">
+            <div class="track-left">            
+            <span class="track-name">Blue Eyes</span>
+              </div>
+            <button class="vote-btn" onclick="vote('Blue Eyes')">Votar</button>
+          </div>
+        </li>
+
+        <li class="track">
+          <div class="track-top">
+            <div class="track-left">            
+            <span class="track-name">The Last Time - Demo Version</span>
+              </div>
+            <button class="vote-btn" onclick="vote('The Last Time - Demo Version')">Votar</button>
+          </div>
+        </li>
+
+        <li class="track">
+          <div class="track-top">
+            <div class="track-left">            
+            <span class="track-name">Sounds of Freedom</span>
+              </div>
+            <button class="vote-btn" onclick="vote('Sounds of Freedom')">Votar</button>
+          </div>
+        </li>        
+      </ul>
+    </div>
+  </div>
+    
+      <!-- UTOPIA (EP) -->
+  <div class="album">
+    <div class="album-cover">
+    <img src="assets/covers/utopia.jpg" alt="Utopia (2009)">
+      </div>
+    <div class="album-info">
+      <h2>Utopia(2009)</h2>
+      <ul>
+        <li class="track">
+          <div class="track-top">
+            <div class="track-left">
+            <span class="track-name">Utopia</span>
+              </div>              
+            <button class="vote-btn" onclick="vote('Utopia')">Votar</button>
+          </div>
+        </li>
+       </ul>
+    </div>
+  </div>
+
+  <!-- THE UNFORGIVING -->
+  <div class="album">
+    <div class="album-cover">
+    <img src="assets/covers/unforgiving.jpg" alt="The Unforgiving (2011)">
+      </div>
+    <div class="album-info">
+      <h2>The Unforgiving (2011)</h2>
+      <ul>
+        <li class="track">
+            <div class="track-top">
+            <div class="track-left">              
+            <span class="track-name">Why Not Me</span>
+               </div>
+            <button class="vote-btn" onclick="vote('Why Not Me')">Votar</button>
+          </div>
+        </li>
+        
+        <li class="track">
+            <div class="track-top">
+            <div class="track-left">              
+            <span class="track-name">Shot in the Dark</span>
+            <span class="played">✔ já tocamos</span>
+              </div>
+          </div>
+        </li>
+
+        <li class="track">
+            <div class="track-top">
+            <div class="track-left">              
+            <span class="track-name">In the Middle of the Night</span>
+            <span class="played">✔ já tocamos</span>
+              </div>
+          </div>
+        </li>       
+
+        <li class="track">
+            <div class="track-top">
+            <div class="track-left">              
+            <span class="track-name">Faster</span>
+            <span class="played">✔ já tocamos</span>
+              </div>
+          </div>
+        </li>
+
+        <li class="track">
+            <div class="track-top">
+            <div class="track-left">              
+            <span class="track-name">Fire and Ice</span>
+               </div>              
+            <button class="vote-btn" onclick="vote('Fire and Ice')">Votar</button>
+          </div>
+        </li>
+
+        <li class="track">
+            <div class="track-top">
+            <div class="track-left">              
+            <span class="track-name">Iron</span>
+            <span class="played">✔ já tocamos</span>
+              </div>
+          </div>
+        </li>
+
+        <li class="track">
+            <div class="track-top">
+            <div class="track-left">              
+            <span class="track-name">Where Is the Edge</span>
+               </div>
+            <button class="vote-btn" onclick="vote('Where Is the Edge')">Votar</button>
+          </div>
+        </li>        
+        
+        <li class="track">
+            <div class="track-top">
+            <div class="track-left">              
+            <span class="track-name">Sinéad</span>
+            <span class="played">✔ já tocamos</span>
+              </div>
+          </div>
+        </li>
+
+        <li class="track">
+            <div class="track-top">
+            <div class="track-left">              
+            <span class="track-name">Lost</span>
+               </div>
+            <button class="vote-btn" onclick="vote('Lost')">Votar</button>
+          </div>
+        </li>       
+
+        <li class="track">
+            <div class="track-top">
+            <div class="track-left">              
+            <span class="track-name">Murder</span>
+               </div>              
+            <button class="vote-btn" onclick="vote('Murder')">Votar</button>
+          </div>
+        </li>
+
+        <li class="track">
+            <div class="track-top">
+            <div class="track-left">              
+            <span class="track-name">A Demon's Fate</span>
+               </div>
+            <button class="vote-btn" onclick="vote('A Demon's Fate')">Votar</button>
+          </div>
+        </li>
+
+        <li class="track">
+            <div class="track-top">
+            <div class="track-left">              
+            <span class="track-name">Stairway to the Skies</span>
+               </div>
+            <button class="vote-btn" onclick="vote('Stairway to the Skies')">Votar</button>
+          </div>
+        </li>        
+
+        <li class="track">
+            <div class="track-top">
+            <div class="track-left">              
+            <span class="track-name">I Don't Wanna</span>
+               </div>
+            <button class="vote-btn" onclick="vote('I Don\'t Wanna')">Votar</button>
+          </div>
+        </li>        
+
+        <li class="track">
+            <div class="track-top">
+            <div class="track-left">              
+            <span class="track-name">Empty Eyes</span>
+               </div>
+            <button class="vote-btn" onclick="vote('Empty Eyes')">Votar</button>
+          </div>
+        </li>        
+        
+        <li class="track">
+            <div class="track-top">
+            <div class="track-left">              
+            <span class="track-name">The Last Dance</span>
+               </div>
+            <button class="vote-btn" onclick="vote('The Last Dance')">Votar</button>
+          </div>
+        </li>   
+      </ul>      
+    </div>
+  </div>
+
+  <!-- HYDRA -->
+  <div class="album">
+    <div class="album-cover">
+    <img src="assets/covers/hydra.jpg" alt="Hydra (2014)">
+    </div>
+    <div class="album-info">
+      <h2>Hydra (2014)</h2>
+      <ul>
+        <li class="track">
+            <div class="track-top">
+            <div class="track-left">              
+            <span class="track-name">Let Us Burn</span>
+            <span class="played">✔ já tocamos</span>
+              </div>
+          </div>
+        </li>
+
+        <li class="track">
+            <div class="track-top">
+            <div class="track-left">              
+            <span class="track-name">Dangerous</span>
+               </div>
+            <button class="vote-btn" onclick="vote('Dangerous')">Votar</button>
+          </div>
+        </li>       
+
+        <li class="track">
+            <div class="track-top">
+            <div class="track-left">              
+            <span class="track-name">And We Run</span>
+               </div>
+            <button class="vote-btn" onclick="vote('And We Run')">Votar</button>
+          </div>
+        </li>
+
+        <li class="track">
+            <div class="track-top">
+            <div class="track-left">              
+            <span class="track-name">Paradise (What About Us?)</span>
+            <span class="played">✔ já tocamos</span>
+              </div>
+          </div>
+        </li>
+
+        <li class="track">
+            <div class="track-top">
+            <div class="track-left">              
+            <span class="track-name">Edge of the World</span>
+               </div>
+            <button class="vote-btn" onclick="vote('Edge of the World')">Votar</button>
+          </div>
+        </li>
+        
+        <li class="track">
+            <div class="track-top">
+            <div class="track-left">              
+            <span class="track-name">Silver Moonlight</span>
+               </div>
+            <button class="vote-btn" onclick="vote('Silver Moonlight')">Votar</button>
+          </div>
+        </li>        
+        
+        <li class="track">
+            <div class="track-top">
+            <div class="track-left">              
+            <span class="track-name">Covered by Roses</span>
+            <span class="played">✔ já tocamos</span>
+              </div>
+          </div>
+        </li>
+
+        <li class="track">
+            <div class="track-top">
+            <div class="track-left">              
+            <span class="track-name">Dog Days</span>
+               </div>
+            <button class="vote-btn" onclick="vote('Dog Days')">Votar</button>
+          </div>
+        </li>       
+
+        <li class="track">
+            <div class="track-top">
+            <div class="track-left">              
+            <span class="track-name">Tell Me Why</span>
+               </div>
+            <button class="vote-btn" onclick="vote('Tell Me Why')">Votar</button>
+          </div>
+        </li>
+
+        <li class="track">
+            <div class="track-top">
+            <div class="track-left">              
+            <span class="track-name">Whole World Is Watching</span>
+               </div>
+            <button class="vote-btn" onclick="vote('Whole World Is Watching')">Votar</button>
+          </div>
+        </li>
+
+        <li class="track">
+            <div class="track-top">
+            <div class="track-left">              
+            <span class="track-name">Overcome</span>
+               </div>
+            <button class="vote-btn" onclick="vote('Overcome')">Votar</button>
+          </div>
+        </li>        
+        
+      </ul>
+    </div>
+  </div>
+
+  <!-- RESIST -->
+  <div class="album">
+    <div class="album-cover">
+    <img src="assets/covers/resist.jpg" alt="Resist (2019)">
+    </div>
+    <div class="album-info">
+      <h2>Resist (2019)</h2>
+      <ul>
+        <li class="track">
+            <div class="track-top">
+            <div class="track-left">              
+            <span class="track-name">The Reckoning</span>
+            <span class="played">✔ já tocamos</span>
+              </div>
+          </div>
+        </li>
+
+        <li class="track">
+            <div class="track-top">
+            <div class="track-left">              
+            <span class="track-name">Endless War</span>
+               </div>
+            <button class="vote-btn" onclick="vote('Endless War')">Votar</button>
+          </div>
+        </li>       
+
+        <li class="track">
+            <div class="track-top">
+            <div class="track-left">              
+            <span class="track-name">Raise Your Banner</span>
+               </div>
+            <button class="vote-btn" onclick="vote('Raise Your Banner')">Votar</button>
+          </div>
+        </li>
+
+        <li class="track">
+            <div class="track-top">
+            <div class="track-left">              
+            <span class="track-name">Supernova</span>
+               </div>    
+            <button class="vote-btn" onclick="vote('Supernova')">Votar</button>
+          </div>
+        </li>
+
+        <li class="track">
+            <div class="track-top">
+            <div class="track-left">              
+            <span class="track-name">Holy Ground</span>
+               </div>
+            <button class="vote-btn" onclick="vote('Holy Ground')">Votar</button>
+          </div>
+        </li>
+        
+        <li class="track">
+            <div class="track-top">
+            <div class="track-left">              
+            <span class="track-name">In Vain</span>
+               </div>
+            <button class="vote-btn" onclick="vote('In Vain')">Votar</button>
+          </div>
+        </li>        
+        
+        <li class="track">
+            <div class="track-top">
+            <div class="track-left">              
+            <span class="track-name">Firelight</span>
+               </div>              
+            <button class="vote-btn" onclick="vote('Firelight')">Votar</button>
+          </div>
+        </li>
+
+        <li class="track">
+            <div class="track-top">
+            <div class="track-left">              
+            <span class="track-name">Mad World</span>
+               </div>
+            <button class="vote-btn" onclick="vote('Mad World')">Votar</button>
+          </div>
+        </li>       
+
+        <li class="track">
+            <div class="track-top">
+            <div class="track-left">              
+            <span class="track-name">Mercy Mirror</span>
+               </div>
+            <button class="vote-btn" onclick="vote('Mercy Mirror')">Votar</button>
+          </div>
+        </li>
+
+        <li class="track">
+            <div class="track-top">
+            <div class="track-left">             
+            <span class="track-name">Trophy Hunter</span>
+               </div>
+            <button class="vote-btn" onclick="vote('Trophy Hunter')">Votar</button>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- BLEED OUT -->
+  <div class="album">
+    <div class="album-cover">
+    <img src="assets/covers/bleed-out.jpg" alt="Bleed Out (2023)">
+    </div>
+    <div class="album-info">
+      <h2>Bleed Out (2023)</h2>
+      <ul>
+        <li class="track">
+            <div class="track-top">
+            <div class="track-left">              
+            <span class="track-name">We Go to War</span>
+               </div>
+            <button class="vote-btn" onclick="vote('We Go to War')">Votar</button>
+          </div>
+        </li>
+
+        <li class="track">
+            <div class="track-top">
+            <div class="track-left">              
+            <span class="track-name">Bleed Out</span>
+            <span class="played">✔ já tocamos</span>
+              </div>
+          </div>
+        </li>       
+
+        <li class="track">
+            <div class="track-top">
+            <div class="track-left">              
+            <span class="track-name">Wireless</span>
+            <span class="played">✔ já tocamos</span>
+              </div>
+          </div>
+        </li>
+
+        <li class="track">
+            <div class="track-top">
+            <div class="track-left">              
+            <span class="track-name">Worth Dying For</span>
+               </div>
+            <button class="vote-btn" onclick="vote('Worth Dying For')">Votar</button>
+          </div>
+        </li>
+      
+        <li class="track">
+            <div class="track-top">
+            <div class="track-left">              
+            <span class="track-name">Ritual</span>
+               </div>
+            <button class="vote-btn" onclick="vote('Ritual')">Votar</button>
+          </div>
+        </li>
+        
+        <li class="track">
+            <div class="track-top">
+            <div class="track-left">              
+            <span class="track-name">Cyanide Love</span>
+               </div>
+            <button class="vote-btn" onclick="vote('Cyanide Love')">Votar</button>
+          </div>
+        </li>        
+        
+        <li class="track">
+            <div class="track-top">
+            <div class="track-left">              
+            <span class="track-name">The Purge</span>
+               </div>
+            <button class="vote-btn" onclick="vote('The Purge')">Votar</button>
+          </div>
+        </li>
+
+        <li class="track">
+            <div class="track-top">
+            <div class="track-left">              
+            <span class="track-name">Don't Pray for Me</span>
+               </div>
+            <button class="vote-btn" onclick="vote('Don\'t Pray for Me')">Votar</button>
+          </div>
+        </li>       
+  
+        <li class="track">
+            <div class="track-top">
+            <div class="track-left">              
+            <span class="track-name">Shed My Skin</span>
+               </div>
+            <button class="vote-btn" onclick="vote('Shed My Skin')">Votar</button>
+          </div>
+        </li>
+
+        <li class="track">
+            <div class="track-top">
+            <div class="track-left">              
+            <span class="track-name">Unbroken</span>
+               </div>
+            <button class="vote-btn" onclick="vote('Unbroken')">Votar</button>
+          </div>
+        </li>
+
+        <li class="track">
+            <div class="track-top">
+            <div class="track-left">              
+            <span class="track-name">Entertain You</span>
+               </div>
+            <button class="vote-btn" onclick="vote('Entertain You')">Votar</button>
+          </div>
+        </li>
+      </ul>      
+    </div>
+  </div>
+
+</section>
+
+<footer class="site-footer">
+  <p>© 2026 – Denying Silence – WT Tribute</p>
+
+  <p class="disclaimer">
+    Projeto de fãs · Não afiliado à banda Within Temptation
+  </p>
+
+  <p class="instagram">
+    <a href="https://instagram.com/wttributebr" target="_blank" rel="noopener">
+      <img src="instagram_l.png" alt="Instagram" class="instagram-icon">
+      @wttributebr
+    </a>
+  </p>
+</footer>
+
+<script>
+const API_URL = "https://script.google.com/macros/s/AKfycbxlVYyEDytU6p7czoUawQNyiMwWYFJOCUgaUwAHdiuuzAYwr3l0tY5G9oEVI8aqU_-HiA/exec";
+
+function gerarHash() {
+  let hash = localStorage.getItem("voteHash");
+  if (!hash) {
+    hash = crypto.randomUUID();
+    localStorage.setItem("voteHash", hash);
+  }
+  return hash;
+}
+
+function vote(musica) {
+  fetch(API_URL, {
+    method: "POST",
+    mode: "no-cors",
+    body: JSON.stringify({
+      musica: musica,
+      hash: gerarHash()
+    })
+  });
+
+   mostrarToast(); // 👈 no lugar do alert
+}
+
+function mostrarToast() {
+  const toast = document.getElementById("toast");
+  toast.classList.add("show");
+
+  setTimeout(() => {
+    toast.classList.remove("show");
+  }, 5000);
+}
+
+function filtrarMusicas() {
+  const termo = document
+    .getElementById("searchInput")
+    .value
+    .toLowerCase();
+
+  const albuns = document.querySelectorAll(".album");
+
+  albuns.forEach(album => {
+    const tracks = album.querySelectorAll(".track");
+    let albumTemResultado = false;
+
+    tracks.forEach(track => {
+      const nome = track
+        .querySelector(".track-name")
+        .innerText
+        .toLowerCase();
+
+      const match = nome.includes(termo);
+      track.style.display = match ? "block" : "none";
+
+      if (match) albumTemResultado = true;
+    });
+
+    /* esconde o álbum inteiro se não houver matches */
+    album.style.display = albumTemResultado ? "flex" : "none";
+  });
+}
+</script>
+
+
+  
+ 
+<div id="toast" class="toast">
+  <span class="toast-title">
+    <strong>Denying Silence – WT Tribute</strong>
+  </span>
+  <span class="toast-message">
+    🔥 Voto registrado com sucesso! 🎼
+  </span>
+</div>
+
+<script>
+/* ===== LINKS YOUTUBE ===== */
+const youtubeLinks = {
+"Restless": "https://www.youtube.com/watch?v=I2a0KuszaZg",
+"Enter": "https://youtu.be/hHOHRaj3KR0",
+"Pearls of Light": "https://youtu.be/UpcFxe8OjOw",
+"Deep Within": "https://youtu.be/eKRsOE_wgcY",
+"Gatekeeper": "https://youtu.be/T0fmMGSJpUc",
+"Grace": "https://youtu.be/UOLNMLEkoXw",
+"Blooded": "https://youtu.be/NLLLampTEjI",
+"Candles": "https://youtu.be/dYI_wYh-1QM",
+  
+"The Dance": "https://youtu.be/dw9X0EfUAEA",
+"Another Day": "https://youtu.be/35-CdjXoljk",
+"The Other Half (Of Me)": "https://youtu.be/cofDqUZZPtg",
+"Restless (Remix)": "https://youtu.be/-dQ_oN7V6Tc",
+"Candles & Pearls of Light (Remix)": "https://youtu.be/QNHy7iSCj34",
+
+"Mother Earth": "https://youtu.be/M5AnZNkYlB0",
+"Ice Queen": "https://youtu.be/frXPezW_Q84",
+"Our Farewell": "https://youtu.be/W8YMx5ouNNA",
+"Caged": "https://youtu.be/8cx7jE2Rpr8",
+"The Promise": "https://youtu.be/Ytawyjvj-sM",
+"Never-Ending Story": "https://youtu.be/xOrXMGfTrJ8",
+"Deceiver of Fools": "https://youtu.be/EqniPax8LGE",
+"Intro ME": "https://youtu.be/qy7GdeOxA4s",
+"Dark Wings": "https://youtu.be/SJYj03GXwxU",
+"In Perfect Harmony": "https://youtu.be/S3DeZuhqK6M",
+"Jane Doe": "https://youtu.be/cshY1H-isdk",
+"Bittersweet": "https://youtu.be/MoMRa9Dr0iw?si=ai9iBmg3MkcnvdRV",
+"World Of Make Believe": "https://youtu.be/TpMzZgvqkUU",
+
+"Intro": "https://youtu.be/UGIh8Td0-Jk",
+"See Who I Am": "https://youtu.be/VMhhAzD5rvo",
+"Jillian": "https://youtu.be/2dgcNQSOSA0",
+"Stand My Ground": "https://youtu.be/98xh5Hb9QAM",
+"Pale": "https://youtu.be/_JhSsbFRGCo",
+"Forsaken": "https://youtu.be/6fgudq4CcH8",
+"Angels": "https://youtu.be/4ifTjdKrTPw",
+"Memories": "https://youtu.be/gsQIOgkZt68",
+"Aquarius": "https://youtu.be/f0336wmCnVQ",
+"It's the Fear": "https://youtu.be/8mbfFJ6_wc8",
+"Somewhere": "https://youtu.be/wlxWpGAfClQ",
+"A Dangerous Mind": "https://youtu.be/mgsayvglv5o",
+"The Swan Song": "https://youtu.be/RzoinK83vrE",
+"Toward the End": "https://youtu.be/y-4phsnE9hQ",
+"Destroyed (Demo Version)": "https://youtu.be/ffO8fOYm7qg",
+"Say My Name": "https://youtu.be/kc4fKReEKh4",
+
+"Running Up That Hill": "https://youtu.be/BE1zN61AHy4",
+
+"The Howling": "https://youtu.be/aa5BUDKgzRQ",
+"What Have You Done": "https://youtu.be/UKwrgWkur00",
+"Frozen": "https://youtu.be/IfLoCG1MLqI",
+"Our Solemn Hour": "https://youtu.be/yCxb8FwhzK8",
+"The Heart of Everything": "https://youtu.be/aQ-CoYA4XRw",
+"Hand of Sorrow": "https://youtu.be/TDhbewTR_vg",
+"The Cross": "https://youtu.be/HKUMxhnDQ2k",
+"Final Destination": "https://youtu.be/C5WPgCbORt8",
+"All I Need": "https://youtu.be/r3w6iUMS7LQ",
+"The Truth Beneath the Rose": "https://youtu.be/9fLjMt41JU8",
+"Forgiven": "https://youtu.be/1uVQj1aLcq8",
+"Blue Eyes": "https://youtu.be/40jZJhxBD-M",
+"The Last Time - Demo Version": "https://youtu.be/REsmoK62iXI",
+"Sounds of Freedom": "https://youtu.be/hm4xD0UvERc?si=rUPhwLZo5LqSiQ1a",
+
+"Utopia": "https://youtu.be/pgqDURxuZo0",
+
+"Why Not Me": "https://youtu.be/3B9BhFnr1gg",
+"Shot in the Dark": "https://youtu.be/mLz61g0JLxQ",
+"In the Middle of the Night": "https://youtu.be/ZqG5fL5PVR8",
+"Faster": "https://youtu.be/iQVei5C2N4E",
+"Fire and Ice": "https://youtu.be/ve2pS-jxXz0",
+"Iron": "https://youtu.be/Il0yuLe8FBM",
+"Where Is the Edge": "https://youtu.be/D0npkAdnjMk",
+"Sinéad": "https://youtu.be/2GxU2JOkQsk",
+"Lost": "https://youtu.be/0G2bkvapKME",
+"Murder": "https://youtu.be/gQvo7tZzECk",
+"A Demon's Fate": "https://youtu.be/0vxx04quIzs",
+"Stairway to the Skies": "https://youtu.be/kLBoPCK1FrA",
+"I Don't Wanna": "https://youtu.be/tj99ZcmGlxw",
+"Empty Eyes": "https://youtu.be/ViE7mEvVtF8",
+"The Last Dance": "https://youtu.be/EHelWvxK84E",
+
+"Grenade (Bruno Mars Cover)": "https://youtu.be/aynjIfao2AI",
+"Titanium (David Guetta Cover)": "https://youtu.be/K1njYUrHkww",
+"Let Her Go (Passenger Cover)": "https://youtu.be/nmH2m4VUOJM",
+"Summertime Sadness (Lana Del Rey Cover)": "https://youtu.be/2r3feGig6MU",
+"Radioactive (Imagine Dragons Cover)": "https://youtu.be/6GNGrXDFrjM",
+"Crazy (Gnarls Barkley Cover)": "https://youtu.be/gWlBwVx553Q",
+"Dirty Dancer (Enrique Iglesias Cover)": "https://youtu.be/iFzRN_vOAh8",
+"Don't You Worry Child (Swedish House Mafia Cover)": "https://youtu.be/5ubUSHSDk8A",
+"Behind Blue Eyes (The Who Cover)": "https://youtu.be/o8MMR7X16aE",
+"The Power of Love (Frankie Goes To Hollywood Cover)": "https://youtu.be/Av7ikJHbZD8",
+"Apologize (One Republic Cover)": "https://youtu.be/NJ9erbTUsX4",
+
+"Let Us Burn": "https://youtu.be/GKDzivMCtek",
+"Dangerous": "https://youtu.be/MAiV8RpqzME",
+"And We Run": "https://youtu.be/awvqIi427_A",
+"Paradise (What About Us?)": "https://youtu.be/Dy6MpsDPKts",
+"Edge of the World": "https://youtu.be/GkvWZmU7sjU",
+"Silver Moonlight": "https://youtu.be/8moOvGsGBok",
+"Covered by Roses": "https://youtu.be/hy8V0n4-jXU",
+"Dog Days": "https://youtu.be/o680Mi1I4B0",
+"Tell Me Why": "https://youtu.be/s2RAGcITIR0",
+"Whole World Is Watching": "https://youtu.be/VRNPkJ0ELPc",
+"Living on Fire (Demo Version)": "https://youtu.be/BYgu80ypckc",
+"Overcome": "https://youtu.be/c1QzUKI6jKc",
+  
+"The Reckoning": "https://youtu.be/S7sOZ_TFUXg",
+"Endless War": "https://youtu.be/3xUVCeR0zsI",
+"Raise Your Banner": "https://youtu.be/ZrMGGMNTKa8",
+"Supernova": "https://youtu.be/Z3nb_r18ug0",
+"Holy Ground": "https://youtu.be/BrVTAbt4cGI",
+"In Vain": "https://youtu.be/U2ma_R1UUBw",
+"Firelight": "https://youtu.be/1JHgGD8p91M",
+"Mad World": "https://youtu.be/Jlv2NxO0qVU",
+"Mercy Mirror": "https://youtu.be/n9MDx6C5FRQ",
+"Trophy Hunter": "https://youtu.be/0Yscf2oV3LQ",
+
+"We Go to War": "https://youtu.be/Y1QAMCYmAcY",
+"Bleed Out": "https://youtu.be/dBilK-h3lRQ",
+"Wireless": "https://youtu.be/3lrDoeSxlm0",
+"Worth Dying For": "https://youtu.be/kLQQTjp7JxE",
+"Ritual": "https://youtu.be/ZuceMzApT8w",
+"Cyanide Love": "https://youtu.be/lyHKttIJBX0",
+"The Purge": "https://youtu.be/yoBIQkL4r0s",
+"Don't Pray for Me": "https://youtu.be/J60IPPvLhWA",
+"Shed My Skin": "https://youtu.be/mP0TVptLDQE",
+"Unbroken": "https://youtu.be/Ol8S1VLcL7k",
+"Entertain You": "https://youtu.be/a7-8hK2f_So",
+  
+  };
+
+/* ===== INJETAR BOTÃO YT ===== */
+document.querySelectorAll(".track").forEach(track => {
+  const nameEl = track.querySelector(".track-name");
+  if (!nameEl) return;
+
+  const nome = nameEl.innerText.trim();
+  const link = youtubeLinks[nome];
+
+  if (link) {
+    const yt = document.createElement("a");
+    yt.href = link;
+    yt.target = "_blank";
+    yt.rel = "noopener";
+    yt.className = "yt-btn";
+
+    const img = document.createElement("img");
+    img.src = "YT.png";
+    img.alt = "YouTube";
+
+    yt.appendChild(img);
+
+    track.querySelector(".track-left").appendChild(yt);
+  }
+});
+</script>
+  
+  
+</body>
+</html>
