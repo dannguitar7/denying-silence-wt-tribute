@@ -1464,24 +1464,44 @@ function gerarHash() {
   return hash;
 }
 
-function vote(musica) {
-  fetch(API_URL, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
+async function vote(musica) {
+  try {
+    const hash = gerarHash();
+
+    // 🔹 CAPTURA IP + CIDADE + PAÍS NO NAVEGADOR
+    const geoRes = await fetch("https://ipapi.co/json/");
+    const geo = await geoRes.json();
+
+    const payload = {
       musica: musica,
-      hash: gerarHash()
-    })
-  })
-  .then(() => {
-    mostrarToast();
-  })
-  .catch(() => {
+      hash: hash,
+      ip: geo.ip || "Desconhecido",
+      cidade: geo.city || "Desconhecida",
+      pais: geo.country_name || "Desconhecido"
+    };
+
+    const res = await fetch(API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(payload)
+    });
+
+    const data = await res.json();
+
+    if (data.success) {
+      mostrarToast();
+    } else {
+      alert(data.error || "Erro ao registrar voto");
+    }
+
+  } catch (err) {
+    console.error(err);
     alert("Erro ao registrar voto");
-  });
+  }
 }
+
 
 
 function mostrarToast() {
