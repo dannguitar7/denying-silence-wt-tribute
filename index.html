@@ -1486,13 +1486,13 @@ const payload = {
   pais: geo.country_name || "Desconhecido"
 };
 
+const formData = new URLSearchParams(payload);
+
 const res = await fetch(API_URL, {
   method: "POST",
-  headers: {
-    "Content-Type": "application/json"
-  },
-  body: JSON.stringify(payload)
+  body: formData
 });
+
 
 
 
