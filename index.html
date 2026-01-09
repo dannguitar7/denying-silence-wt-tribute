@@ -1478,18 +1478,19 @@ try {
 }
 
 
-    const payload = {
-      musica: musica,
-      hash: hash,
-      ip: geo.ip || "Desconhecido",
-      cidade: geo.city || "Desconhecida",
-      pais: geo.country_name || "Desconhecido"
-    };
+const payload = new URLSearchParams({
+  musica: musica,
+  hash: hash,
+  ip: geo.ip || "Desconhecido",
+  cidade: geo.city || "Desconhecido",
+  pais: geo.country_name || "Desconhecido"
+});
 
 const res = await fetch(API_URL, {
   method: "POST",
-  body: JSON.stringify(payload)
+  body: payload
 });
+
 
     const data = await res.json();
 
