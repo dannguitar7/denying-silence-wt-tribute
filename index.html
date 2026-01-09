@@ -1453,7 +1453,7 @@
 </footer>
 
 <script>
-const API_URL = "https://script.google.com/macros/s/AKfycbwkO6jv-fqZCY1z25uI2G-dmvY4gowhqtIPXBW5OL68qfTDQh7kYDMPtF2-qZpqRX3p/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbyaFN4dKa_wRHZ-XXOV-lO7NLhoh6CiIPE5mjUDqeofee5jfIm-u9mrKoQVcsFPabc_/exec";
 
 function gerarHash() {
   let hash = localStorage.getItem("voteHash");
@@ -1466,23 +1466,23 @@ function gerarHash() {
 
 // Nova função para buscar os dados de localização do visitante
 async function vote(musica) {
+  // 1. Tenta capturar os dados reais do visitante
   let ip = "Desconhecido";
   let cidade = "Desconhecida";
   let pais = "Desconhecido";
 
   try {
-    // Consulta um serviço gratuito de IP
     const response = await fetch('https://ipapi.co/json/');
     const geoData = await response.json();
     
-    ip = geoData.ip || "Desconhecido";
-    cidade = geoData.city || "Desconhecida";
-    pais = geoData.country_name || "Desconhecido";
+    ip = geoData.ip;
+    cidade = geoData.city;
+    pais = geoData.country_name;
   } catch (error) {
-    console.error("Erro ao obter geolocalização:", error);
+    console.error("Não foi possível obter a localização", error);
   }
 
-  // Agora envia os dados reais capturados
+  // 2. Envia para o Google Apps Script
   fetch(API_URL, {
     method: "POST",
     mode: "no-cors",
