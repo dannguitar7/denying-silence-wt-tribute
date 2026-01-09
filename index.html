@@ -1495,39 +1495,14 @@ async function vote(musica) {
   }
 }
 
-
-
-
-
-    const data = await res.json();
-
-    if (data.success) {
-      mostrarToast();
-    } else {
-      alert(data.error || "Erro ao registrar voto");
-    }
-
-    } catch (err) {
-      console.error("ERRO COMPLETO:", err);
-      alert("Erro ao registrar voto: " + err.message);
-    }
-
-}
-
-
-
 function mostrarToast() {
   const toast = document.getElementById("toast");
-  if (!toast) return;
-
   toast.classList.add("show");
-
-  setTimeout(() => {
-    toast.classList.remove("show");
-  }, 5000);
+  setTimeout(() => toast.classList.remove("show"), 5000);
 }
+</script>
 
-
+<script>
 function filtrarMusicas() {
   const termo = document
     .getElementById("searchInput")
@@ -1557,7 +1532,6 @@ function filtrarMusicas() {
   });
 }
 </script>
-
 
   
  
