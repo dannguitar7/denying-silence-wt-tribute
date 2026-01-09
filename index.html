@@ -1466,32 +1466,35 @@ function gerarHash() {
 
 async function vote(musica) {
   try {
-    const hash = gerarHash();
+    const payload = {
+      musica: musica,
+      hash: gerarHash(),
+      ip: "Site",
+      cidade: "Site",
+      pais: "Site"
+    };
 
-// 🔹 CAPTURA IP + CIDADE + PAÍS NO NAVEGADOR
-let geo = {};
-try {
-  const geoRes = await fetch("https://ipapi.co/json/");
-  geo = await geoRes.json();
-} catch (e) {
-  geo = {};
+    const formData = new URLSearchParams(payload);
+
+    const res = await fetch(API_URL, {
+      method: "POST",
+      body: formData
+    });
+
+    const data = await res.json();
+
+    if (data.success) {
+      mostrarToast();
+    } else {
+      alert(data.error || "Erro ao registrar voto");
+    }
+
+  } catch (err) {
+    console.error(err);
+    alert("Erro ao registrar voto");
+  }
 }
 
-
-const payload = {
-  musica: musica,
-  hash: hash,
-  ip: geo.ip || "Desconhecido",
-  cidade: geo.city || "Desconhecido",
-  pais: geo.country_name || "Desconhecido"
-};
-
-const formData = new URLSearchParams(payload);
-
-const res = await fetch(API_URL, {
-  method: "POST",
-  body: formData
-});
 
 
 
