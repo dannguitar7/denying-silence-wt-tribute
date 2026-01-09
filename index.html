@@ -1468,9 +1468,15 @@ async function vote(musica) {
   try {
     const hash = gerarHash();
 
-    // 🔹 CAPTURA IP + CIDADE + PAÍS NO NAVEGADOR
-    const geoRes = await fetch("https://ipapi.co/json/");
-    const geo = await geoRes.json();
+// 🔹 CAPTURA IP + CIDADE + PAÍS NO NAVEGADOR
+let geo = {};
+try {
+  const geoRes = await fetch("https://ipapi.co/json/");
+  geo = await geoRes.json();
+} catch (e) {
+  geo = {};
+}
+
 
     const payload = {
       musica: musica,
@@ -1506,12 +1512,15 @@ async function vote(musica) {
 
 function mostrarToast() {
   const toast = document.getElementById("toast");
+  if (!toast) return;
+
   toast.classList.add("show");
 
   setTimeout(() => {
     toast.classList.remove("show");
   }, 5000);
 }
+
 
 function filtrarMusicas() {
   const termo = document
