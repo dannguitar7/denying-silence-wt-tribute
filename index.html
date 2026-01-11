@@ -1496,26 +1496,29 @@ async function vote(musica) {
   const finalURL = `${API_URL}?${params.toString()}`;
 
   try {
-    // REMOVIDO o "no-cors" para que o JS consiga ler a resposta do Google
-    const res = await fetch(finalURL, { method: "GET" });
+    const res = await fetch(finalURL, { 
+      method: "GET",
+      mode: "cors", 
+      redirect: "follow" 
+    });
+    
     const resultado = await res.json();
 
     if (resultado.success) {
-      // Salva no navegador que ele já votou nesta
+      // Salva no navegador que ele já votou nesta música
       votados.push(musica);
       localStorage.setItem("musicasVotadas", JSON.stringify(votados));
       mostrarToast("🔥 Voto registrado com sucesso! 🎼");
     } else {
+      // Caso o Google responda "Ja votou" ou outro erro
       mostrarToast("❌ " + (resultado.error === "Ja votou" ? "Você já votou nesta música!" : "Erro ao votar."));
     }
   } catch (error) {
     console.error("Erro ao enviar voto:", error);
-    // Mesmo com erro de CORS, o Google Sheets costuma processar o GET. 
-    // Mas o ideal é o Apps Script estar correto.
-    mostrarToast("✅ Voto enviado!"); 
+    // Se houver erro de rede ou leitura do JSON
+    mostrarToast("⚠️ Erro de conexão. Tente novamente."); 
   }
 }
-
 // Ajuste a função mostrarToast para aceitar texto
 function mostrarToast(mensagem) {
   const toast = document.getElementById("toast");
