@@ -1481,8 +1481,12 @@ try {
     const geoData = await response.json();
     
     ip = geoData.ip || "Desconhecido";
-    cidade = (geoData.location && geoData.location.city) || "Desconhecida";
-    pais = (geoData.location && geoData.location.country_label) || "Desconhecido";
+
+    // Tenta pegar a cidade de dois lugares diferentes na resposta
+    cidade = (geoData.location && geoData.location.city) || geoData.city || "Desconhecida";
+
+    // Tenta pegar o país usando campos alternativos que a API costuma enviar
+    pais = (geoData.location && (geoData.location.country_name || geoData.location.country_label)) || geoData.country || "Desconhecido";
     
   } catch (error) {
     console.error("Erro ao capturar localização:", error);
